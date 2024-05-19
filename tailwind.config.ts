@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -8,6 +9,17 @@ const config = {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
 	],
+=======
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
+>>>>>>> 969df3aedb88dbbf6ee96e7b496d3237bbac16f5
   prefix: "",
   theme: {
     container: {
@@ -24,6 +36,22 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+<<<<<<< HEAD
+=======
+        purple: {
+          100: "#F4F7FE",
+          200: "#BCB6FF",
+          400: "#868CFF",
+          500: "#7857FF",
+          600: "#4318FF",
+        },
+        dark: {
+          400: "#7986AC",
+          500: "#606C80",
+          600: "#2B3674",
+          700: "#384262",
+        },
+>>>>>>> 969df3aedb88dbbf6ee96e7b496d3237bbac16f5
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -53,6 +81,16 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+<<<<<<< HEAD
+=======
+      fontFamily: {
+        IBMPlex: ["var(--font-ibm-plex)"],
+      },
+      backgroundImage: {
+        "purple-gradient": "url('/assets/images/gradient-bg.svg')",
+        banner: "url('/assets/images/banner-bg.png')",
+      },
+>>>>>>> 969df3aedb88dbbf6ee96e7b496d3237bbac16f5
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -75,6 +113,10 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+<<<<<<< HEAD
 } satisfies Config
 
 export default config
+=======
+};
+>>>>>>> 969df3aedb88dbbf6ee96e7b496d3237bbac16f5
