@@ -19,7 +19,7 @@ export async function createUser(user: CreateUserParams) {
   }
 }
 
-// READ
+
 export async function getUserById(userId: string) {
   try {
     await connectToDatabase();
@@ -34,7 +34,6 @@ export async function getUserById(userId: string) {
   }
 }
 
-// UPDATE
 export async function updateUser(clerkId: string, user: UpdateUserParams) {
   try {
     await connectToDatabase();
@@ -51,7 +50,6 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
   }
 }
 
-// DELETE
 export async function deleteUser(clerkId: string) {
   try {
     await connectToDatabase();
@@ -73,7 +71,7 @@ export async function deleteUser(clerkId: string) {
   }
 }
 
-// USE CREDITS
+
 export async function updateCredits(userId: string, creditFee: number) {
   try {
     await connectToDatabase();
