@@ -6,12 +6,13 @@ import { handleError } from "../utils";
 import User from "../database/models/user.model";
 import Image from "../database/models/image.model";
 import { redirect } from "next/navigation";
+import { v2 as cloudinary } from "cloudinary";
 
 const populateUser = (query: any) =>
   query.populate({
     path: "author",
     model: User,
-    select: "_id firstName lastName",
+    select: "_id firstName lastName clerkId",
   });
 
 // Image adding
@@ -64,7 +65,7 @@ export const updateImage = async ({
   }
 };
 // image deleting
-export const deletImage = async (imageId: string) => {
+export const deleteImage = async (imageId: string) => {
   try {
     await connectToDatabase();
 
@@ -91,3 +92,91 @@ export const getImageById = async (imageId: string) => {
     handleError(error);
   }
 };
+
+// GET ALL IMAGES
+export const getAllImages = async ({
+  limit = 9,
+  page = 1,
+  searchQuery = "",
+}: {
+  limit?: number;
+  page?: number;
+  searchQuery?: string;
+}) => {
+  try {
+    await connectToDatabase();
+
+    cloudinary.config({
+      cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+      secure: true,
+    });
+    let expression = "folder=aisaas";
+
+    if (searchQuery) {
+      expression += ` AND ${searchQuery}`;
+    }
+    const { resources } = await cloudinary.search
+      .expression(expression)
+      .execute();
+
+    const resourceIds = resources.map((resource: any) => resource.public_id);
+
+    let query = {};
+
+    if (searchQuery) {
+      query = {
+        publicId: {
+          $in: resourceIds,
+        },
+      };
+    }
+
+    const skipAmount = (Number(page) - 1) * limit;
+    const images = await populateUser(Image.find(query))
+      .sort({ updatedAt: -1 })
+      .skip(skipAmount)
+      .limit(limit);
+
+    const totalImages = await Image.find(query).countDocuments();
+    const savedImages = await Image.find().countDocuments();
+
+    return {
+      data: JSON.parse(JSON.stringify(images)),
+      totalPages: Math.ceil(totalImages / limit),
+      savedImages,
+    };
+  } catch (error) {}
+};
+
+// Get User Image
+export async function getUserImages({
+  limit = 9,
+  page = 1,
+  userId,
+}: {
+  limit?: number;
+  page: number;
+  userId: string;
+}) {
+  try {
+    await connectToDatabase();
+
+    const skipAmount = (Number(page) - 1) * limit;
+
+    const images = await populateUser(Image.find({ author: userId }))
+      .sort({ updatedAt: -1 })
+      .skip(skipAmount)
+      .limit(limit);
+
+    const totalImages = await Image.find({ author: userId }).countDocuments();
+
+    return {
+      data: JSON.parse(JSON.stringify(images)),
+      totalPages: Math.ceil(totalImages / limit),
+    };
+  } catch (error) {
+    handleError(error);
+  }
+}
